@@ -1,24 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/home.jsx";
+import { myContext } from "./MyContext";
 function App() {
+  const [store, setStore] = useState({
+    name: "",
+    state: "",
+    lat: "",
+    lon: "",
+    recent: [],
+    setLocation: (loc) => {
+      setStore((prev) => ({
+        ...prev,
+        name: loc.name,
+        state: loc.state,
+        lat: loc.lat,
+        lon: loc.lon,
+      }));
+    },
+    setRecentSearches: (loc) => {
+      setStore((prev) => {
+        let tempRecent = [...prev["recent"]];
+        tempRecent.push({
+          name: loc.name,
+          state: loc.state,
+          lat: loc.lat,
+          lon: loc.lon,
+        });
+        if (tempRecent.length > 5) tempRecent.shift();
+        return { ...prev, recent: tempRecent };
+      });
+    },
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <myContext.Provider value={store}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </myContext.Provider>
   );
 }
 
