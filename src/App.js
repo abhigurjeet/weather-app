@@ -9,6 +9,10 @@ function App() {
     lat: "",
     lon: "",
     recent: [],
+    report: {},
+    setReport: (data) => {
+      setStore((prev) => ({ ...prev, report: data }));
+    },
     setLocation: (loc) => {
       setStore((prev) => ({
         ...prev,
